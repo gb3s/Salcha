@@ -1,0 +1,17 @@
+{{- range .Values.services }}
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ template "Sunburn.fullname" $ }}-test-connection"
+  labels:
+    {{- include "Sunburn.labels" $ | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ template "Sunburn.fullname" $ }}:{{ .service.port }}']
+  restartPolicy: Never
+{{- end }}
